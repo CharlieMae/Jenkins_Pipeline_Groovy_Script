@@ -5,27 +5,58 @@ pipeline {
         stage ('Compile Stage') {
 
             steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    echo 'This is our Compile Stage'
+                echo 'This is our Compile Stage'
+            }
+        }
+		
+		stage('Dev Box Confirmation') {
+            steps {
+                input('Deploy to Dev Box ?')
+            }
+        }
+		
+		stage('Dev Box Stage') {
+            when {
+                not {
+                     branch "master"
                 }
+            }
+            steps {
+                echo 'Dev Box Stage done'
             }
         }
 
-        stage ('Testing Stage') {
-
+        stage('QA Box Confirmation') {
             steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    echo 'This is our Testing Stage'
-                }
+                input('Deploy to QA Box ?')
             }
         }
-
-
-        stage ('Deployment Stage') {
-            steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    echo 'This is our Deployment Stage'
+		
+		stage('QA Box Stage') {
+            when {
+                not {
+                     branch "master"
                 }
+            }
+            steps {
+                 echo 'QA Box Stage done'
+            }
+        }
+		
+		stage('Staging Box Confirmation') {
+            steps {
+                input('Deploy to Staging Box ?')
+            }
+        }
+		
+		stage('Staging Box Stage') {
+            when {
+                not {
+                     branch "master"
+                }
+            }
+            steps {
+                 echo 'Staging Box Stage done'
             }
         }
     }
